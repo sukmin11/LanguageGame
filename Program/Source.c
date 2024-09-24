@@ -73,29 +73,83 @@ void Position(int x, int y)
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), position);
 }
 
+
+
 int main()
 {
+	clock_t CurrentTime = clock();
+	printf("%d", CurrentTime);
 	srand(time(NULL));
 
-	int hole = 0; 
-	int line = 1; 
+	int hole1 = 0; 
+	int hole2 = 0;
+	int line1 = 1;
+	int line2 = 1;
 	char key = 0;
 
 	Character character = { 8,22, "¡â"};
 
-	hole = rand() % 7 + 1;
+	hole1 = rand() % 7 + 1;
 
 	for (int i = 1; i < 8; i++)
 	{
-		map[line][i] = '2';
+		map[line1][i] = '2';
 	}
 
-	map[line][hole] = '0';
+	map[line1][hole1] = '0';
 
 	Render();
-
+	
 	while (1)
 	{
+		for (int i = 1; i < HEIGHT - 1; i++)
+		{
+			for (int j = 1; j < WIDTH - 1; j++)
+			{
+				map[i][j] = '0';
+			}
+		}
+
+		for (int i = 1; i < 8; i++)
+		{
+			map[line1][i] = '2';
+			map[line1][hole1] = '0';
+		}
+
+		if (line1 != line2)
+		{
+			for (int i = 1; i < 8; i++)
+			{
+				map[line2][i] = '2';
+				map[line2][hole2] = '0';
+			}
+
+		}
+
+		if (line1 == 15)
+		{
+			line2 = 1;
+			hole2 = rand() % 7 + 1;
+			for (int i = 1; i < 8; i++)
+			{
+				map[line2][i] = '2';
+			}
+
+			map[line2][hole2] = '0';
+		}
+
+		if (line2 == 15)
+		{
+			line1 = 1;
+			hole1 = rand() % 7 + 1;
+			for (int i = 1; i < 8; i++)
+			{
+				map[line1][i] = '2';
+			}
+
+			map[line1][hole1] = '0';
+		}
+
 		if (_kbhit())
 		{
 			key = _getch();
@@ -138,13 +192,26 @@ int main()
 			system("cls");
 
 			Render();
+			Position(character.x, character.y);
+			printf("%s", character.shape);
 
 		}
-		
-		line++;
 
+		Sleep(100);
+		system("cls");
+		Render();
 		Position(character.x, character.y);
 		printf("%s", character.shape);
+		line1++;
+		line2++;
+		if (map[character.y][character.x / 2] == '2')
+		{
+			system("cls");
+			break;
+		}
 	}
+
+	Sleep(500);
+	printf("Game Over\n");
 	return 0;
 }
