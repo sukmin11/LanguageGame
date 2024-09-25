@@ -12,6 +12,8 @@
 #define WIDTH 9
 #define HEIGHT 25
 
+int score = 0;
+
 typedef struct Character
 {
 	int x;
@@ -62,6 +64,7 @@ void Render()
 		}
 		printf("\n");
 	}
+	printf("score : %d\n", score);
 }
 
 void Position(int x, int y)
@@ -74,12 +77,17 @@ void Position(int x, int y)
 }
 
 
-
 int main()
 {
-	clock_t CurrentTime = clock();
-	printf("%d", CurrentTime);
 	srand(time(NULL));
+
+	const char* select[3];
+
+	select[0] = "Play Again?\nYES\nNO\n";
+	select[1] = "Play Again?\nYES  ก็\nNO\n";
+	select[2] = "Play Again?\nYES\nNO   ก็\n";
+
+	AGAIN:
 
 	int hole1 = 0; 
 	int hole2 = 0;
@@ -102,6 +110,7 @@ int main()
 	
 	while (1)
 	{
+
 		for (int i = 1; i < HEIGHT - 1; i++)
 		{
 			for (int j = 1; j < WIDTH - 1; j++)
@@ -161,12 +170,6 @@ int main()
 
 			switch (key)
 			{
-			case UP:
-				if (map[character.y - 1][character.x / 2] != '1')
-				{
-					character.y--;
-				}
-				break;
 			case LEFT:
 				if (map[character.y][character.x / 2 - 1] != '1')
 				{
@@ -177,12 +180,6 @@ int main()
 				if (map[character.y][character.x / 2 + 1] != '1')
 				{
 					character.x += 2;
-				}
-				break;
-			case DOWN:
-				if (map[character.y + 1][character.x / 2] != '1')
-				{
-					character.y++;
 				}
 				break;
 			default:printf("Exception\n");
@@ -197,6 +194,10 @@ int main()
 
 		}
 
+		if (map[line1][hole1] == map[character.y][character.x / 2] || map[line2][hole2] == map[character.y][character.x / 2])
+			score++;
+
+
 		Sleep(100);
 		system("cls");
 		Render();
@@ -204,14 +205,50 @@ int main()
 		printf("%s", character.shape);
 		line1++;
 		line2++;
+		
 		if (map[character.y][character.x / 2] == '2')
-		{
-			system("cls");
 			break;
+	}
+
+	system("cls");
+	Sleep(500);
+	printf("score : %d\n\n", score);
+	printf("%s\n", select[0]);
+	while (1)
+	{
+		if (_kbhit())
+		{
+			key = _getch();
+
+			if (key == -32)
+			{
+				key = _getch();
+			}
+
+			switch (key)
+			{
+			case UP: {
+				system("cls");
+				printf("score : %d\n\n", score);
+				printf("%s\n", select[1]);
+				if (GetAsyncKeyState(VK_SPACE) & 0x0001)
+					goto AGAIN;
+				break;
+			}
+			case DOWN: {
+				system("cls");
+				printf("score : %d\n\n", score);
+				printf("%s\n", select[2]);
+				if (GetAsyncKeyState(VK_SPACE) & 0x0001)
+					goto EXIT;
+				break;
+			}
+			}
 		}
 	}
 
-	Sleep(500);
-	printf("Game Over\n");
+EXIT:
+	printf("GAME OVER\n");
+
 	return 0;
 }
