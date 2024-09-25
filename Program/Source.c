@@ -13,6 +13,12 @@
 #define HEIGHT 25
 
 int score = 0;
+int speed = 0;
+int hole1 = 0; 
+int hole2 = 0;
+int line1 = 1;
+int line2 = 1;
+int level = 300;
 
 typedef struct Character
 {
@@ -51,11 +57,23 @@ char map[HEIGHT][WIDTH] = {
 
 void Render()
 {
+	if (map[line1][hole1] == '0' || map[line2][hole2] == '0')
+	{
+		score++;
+		speed++;
+	}
+
+	if (speed != 0 && speed % 3 == 0)
+	{
+		speed = 0;
+		level -= 10;
+	}
+
 	for (int i = 0; i < HEIGHT; i++)
 	{
 		for (int j = 0; j < WIDTH; j++)
 		{
-			if (map[i][j] == '0')
+			if (map[i][j] == '0' || map[i][j] == '3' || map[i][j] == '4')
 				printf("  ");
 			else if (map[i][j] == '1')
 				printf("¡á");
@@ -89,10 +107,7 @@ int main()
 
 	AGAIN:
 
-	int hole1 = 0; 
-	int hole2 = 0;
-	int line1 = 1;
-	int line2 = 1;
+	int again = 0;
 	char key = 0;
 
 	Character character = { 8,22, "¡â"};
@@ -104,12 +119,13 @@ int main()
 		map[line1][i] = '2';
 	}
 
-	map[line1][hole1] = '0';
+	map[line1][hole1] = '3';
 
 	Render();
 	
 	while (1)
 	{
+		long long CurrentTime = clock();
 
 		for (int i = 1; i < HEIGHT - 1; i++)
 		{
@@ -122,7 +138,7 @@ int main()
 		for (int i = 1; i < 8; i++)
 		{
 			map[line1][i] = '2';
-			map[line1][hole1] = '0';
+			map[line1][hole1] = '3';
 		}
 
 		if (line1 != line2)
@@ -130,7 +146,7 @@ int main()
 			for (int i = 1; i < 8; i++)
 			{
 				map[line2][i] = '2';
-				map[line2][hole2] = '0';
+				map[line2][hole2] = '4';
 			}
 
 		}
@@ -144,7 +160,7 @@ int main()
 				map[line2][i] = '2';
 			}
 
-			map[line2][hole2] = '0';
+			map[line2][hole2] = '4';
 		}
 
 		if (line2 == 15)
@@ -156,7 +172,7 @@ int main()
 				map[line1][i] = '2';
 			}
 
-			map[line1][hole1] = '0';
+			map[line1][hole1] = '3';
 		}
 
 		if (_kbhit())
@@ -194,17 +210,24 @@ int main()
 
 		}
 
-		if (map[line1][hole1] == map[character.y][character.x / 2] || map[line2][hole2] == map[character.y][character.x / 2])
-			score++;
+		if ('3' == map[character.y][character.x / 2])
+		{
+			map[line1][hole1] = '0';
+		}
+		else if ('4' == map[character.y][character.x / 2])
+		{
+			map[line2][hole2] = '0';
+		}
 
-
-		Sleep(100);
-		system("cls");
-		Render();
-		Position(character.x, character.y);
-		printf("%s", character.shape);
-		line1++;
-		line2++;
+		if (CurrentTime != 0 && CurrentTime % level == 0)
+		{
+			system("cls");
+			Render();
+			Position(character.x, character.y);
+			printf("%s", character.shape);
+			line1++;
+			line2++;	
+		}
 		
 		if (map[character.y][character.x / 2] == '2')
 			break;
@@ -212,6 +235,7 @@ int main()
 
 	system("cls");
 	Sleep(500);
+	printf("----GAME OVER----\n");
 	printf("score : %d\n\n", score);
 	printf("%s\n", select[0]);
 	while (1)
@@ -229,26 +253,38 @@ int main()
 			{
 			case UP: {
 				system("cls");
+				printf("----GAME OVER----\n");
 				printf("score : %d\n\n", score);
 				printf("%s\n", select[1]);
-				if (GetAsyncKeyState(VK_SPACE) & 0x0001)
-					goto AGAIN;
+				again = 1;
 				break;
 			}
 			case DOWN: {
 				system("cls");
+				printf("----GAME OVER----\n");
 				printf("score : %d\n\n", score);
 				printf("%s\n", select[2]);
-				if (GetAsyncKeyState(VK_SPACE) & 0x0001)
-					goto EXIT;
+				again = 0;
 				break;
 			}
 			}
+
+			if (again == 1 && GetAsyncKeyState(VK_SPACE) & 0x0001)
+			{
+				score = 0;
+				line1 = 1;
+				line2 = 1;
+				hole1 = 0;
+				hole2 = 0;
+				level = 500;
+				goto AGAIN;
+			}
+			else if (again == 0 && GetAsyncKeyState(VK_SPACE) & 0x0001)
+				goto EXIT;
 		}
 	}
 
 EXIT:
-	printf("GAME OVER\n");
 
 	return 0;
 }
