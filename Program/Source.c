@@ -18,7 +18,12 @@ int hole1 = 0;
 int hole2 = 0;
 int line1 = 1;
 int line2 = 1;
-int level = 300;
+int level = 200;
+int health = 3;
+int heart = 0;
+int heartline = 1;
+int heartOn = 0;
+int heartspeed = 0;
 
 typedef struct Character
 {
@@ -63,22 +68,41 @@ void Render()
 		speed++;
 	}
 
+	if (map[line1][hole1] == '6' || map[line2][hole2] == '6')
+	{
+		health--;
+	}
+
 	if (speed != 0 && speed % 3 == 0)
 	{
 		speed = 0;
 		level -= 10;
+		heartOn = 1;
+		heartspeed = rand() % 200 + 300;
 	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		if(i < health)
+		printf("¢¾");
+		else
+		printf("¢½");
+	}
+
+	printf("\n");
 
 	for (int i = 0; i < HEIGHT; i++)
 	{
 		for (int j = 0; j < WIDTH; j++)
 		{
-			if (map[i][j] == '0' || map[i][j] == '3' || map[i][j] == '4')
+			if (map[i][j] == '0' || map[i][j] == '3' || map[i][j] == '4' || map[i][j] == '6')
 				printf("  ");
 			else if (map[i][j] == '1')
 				printf("¡á");
 			else if (map[i][j] == '2')
 				printf("¡Ø");
+			else if (map[i][j] == '5')
+				printf("¢¾");
 		}
 		printf("\n");
 	}
@@ -105,12 +129,12 @@ int main()
 	select[1] = "Play Again?\nYES  ¡ç\nNO\n";
 	select[2] = "Play Again?\nYES\nNO   ¡ç\n";
 
-	AGAIN:
-
 	int again = 0;
 	char key = 0;
-
+	
 	Character character = { 8,22, "¡â"};
+
+	AGAIN:
 
 	hole1 = rand() % 7 + 1;
 
@@ -175,6 +199,11 @@ int main()
 			map[line1][hole1] = '3';
 		}
 
+		if (heartOn == 1)
+		{
+			map[heartline][heart] = '5';
+		}
+
 		if (_kbhit())
 		{
 			key = _getch();
@@ -218,6 +247,23 @@ int main()
 		{
 			map[line2][hole2] = '0';
 		}
+		else if ('2' == map[character.y][character.x / 2])
+		{
+			for (int i = 1; i < 8; i++)
+			{
+				if (line1 > line2 && hole1 != i)
+					map[line1][i] = '1';
+				else if (line1 > line2 && hole1 == i)
+					map[line1][hole1] ='6';
+				else if (line2 > line1 && hole2 != i)
+					map[line2][i] = '1';
+				else if (line2 > line1 && hole2 == i)
+					map[line2][hole2] = '6';
+			}
+		}
+
+		if (CurrentTime != 0 && CurrentTime & heartspeed == 0)
+			heartline++;
 
 		if (CurrentTime != 0 && CurrentTime % level == 0)
 		{
@@ -228,8 +274,8 @@ int main()
 			line1++;
 			line2++;	
 		}
-		
-		if (map[character.y][character.x / 2] == '2')
+
+		if (health == 0)
 			break;
 	}
 
@@ -271,12 +317,14 @@ int main()
 
 			if (again == 1 && GetAsyncKeyState(VK_SPACE) & 0x0001)
 			{
+				system("cls");
 				score = 0;
 				line1 = 1;
 				line2 = 1;
 				hole1 = 0;
 				hole2 = 0;
-				level = 500;
+				level = 200;
+				health = 3;
 				goto AGAIN;
 			}
 			else if (again == 0 && GetAsyncKeyState(VK_SPACE) & 0x0001)
