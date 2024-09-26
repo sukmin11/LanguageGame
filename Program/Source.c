@@ -13,17 +13,7 @@
 #define HEIGHT 25
 
 int score = 0;
-int speed = 0;
-int hole1 = 0; 
-int hole2 = 0;
-int line1 = 1;
-int line2 = 1;
-int level = 200;
 int health = 3;
-int heart = 0;
-int heartline = 1;
-int heartOn = 0;
-int heartspeed = 0;
 
 typedef struct Character
 {
@@ -62,32 +52,8 @@ char map[HEIGHT][WIDTH] = {
 
 void Render()
 {
-	if (map[line1][hole1] == '0' || map[line2][hole2] == '0')
-	{
-		score++;
-		speed++;
-	}
-
-	if (map[line1][hole1] == '6' || map[line2][hole2] == '6')
-	{
-		health--;
-	}
-
-	if (speed != 0 && speed % 3 == 0)
-	{
-		speed = 0;
-		level -= 10;
-		heartOn = 1;
-		heartspeed = rand() % 200 + 300;
-	}
-
-	for (int i = 0; i < 3; i++)
-	{
-		if(i < health)
+	for (int i = 0; i < health; i++) // HP Ç¥½Ã
 		printf("¢¾");
-		else
-		printf("¢½");
-	}
 
 	printf("\n");
 
@@ -95,14 +61,16 @@ void Render()
 	{
 		for (int j = 0; j < WIDTH; j++)
 		{
-			if (map[i][j] == '0' || map[i][j] == '3' || map[i][j] == '4' || map[i][j] == '6')
+			if (map[i][j] == '0' || map[i][j] == '3')
 				printf("  ");
 			else if (map[i][j] == '1')
 				printf("¡á");
 			else if (map[i][j] == '2')
 				printf("¡Ø");
-			else if (map[i][j] == '5')
+			else if (map[i][j] == '4')
 				printf("¢¾");
+			else if (map[i][j] == '5')
+				printf("¡Ú");
 		}
 		printf("\n");
 	}
@@ -118,7 +86,6 @@ void Position(int x, int y)
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), position);
 }
 
-
 int main()
 {
 	srand(time(NULL));
@@ -129,24 +96,37 @@ int main()
 	select[1] = "Play Again?\nYES  ¡ç\nNO\n";
 	select[2] = "Play Again?\nYES\nNO   ¡ç\n";
 
+	Character character = { 8,22,"¡â" };
+
 	int again = 0;
 	char key = 0;
-	
-	Character character = { 8,22, "¡â"};
+	int hole1 = 0;
+	int hole2 = 0;
+	int line1 = 1;
+	int line2 = 1;
+	int line3 = 1;
+	int line4 = 1;
+	int level = 300;
+	int speed = 0;
+	int itemSpeed = 200;
+	int item = 0;
+	int heartOn = 0;
+	int heart = 0;
+	int starOn = 0;
+	int star = 0;
+	int defense = 0;
 
-	AGAIN:
+AGAIN:
 
 	hole1 = rand() % 7 + 1;
 
 	for (int i = 1; i < 8; i++)
-	{
 		map[line1][i] = '2';
-	}
 
 	map[line1][hole1] = '3';
 
 	Render();
-	
+
 	while (1)
 	{
 		long long CurrentTime = clock();
@@ -157,6 +137,16 @@ int main()
 			{
 				map[i][j] = '0';
 			}
+		}
+
+		if (heartOn == 1)
+		{
+			map[line3][heart] = '4';
+		}
+
+		if (starOn == 1)
+		{
+			map[line4][star] = '5';
 		}
 
 		for (int i = 1; i < 8; i++)
@@ -170,7 +160,7 @@ int main()
 			for (int i = 1; i < 8; i++)
 			{
 				map[line2][i] = '2';
-				map[line2][hole2] = '4';
+				map[line2][hole2] = '3';
 			}
 
 		}
@@ -184,7 +174,7 @@ int main()
 				map[line2][i] = '2';
 			}
 
-			map[line2][hole2] = '4';
+			map[line2][hole2] = '3';
 		}
 
 		if (line2 == 15)
@@ -197,11 +187,6 @@ int main()
 			}
 
 			map[line1][hole1] = '3';
-		}
-
-		if (heartOn == 1)
-		{
-			map[heartline][heart] = '5';
 		}
 
 		if (_kbhit())
@@ -239,48 +224,106 @@ int main()
 
 		}
 
-		if ('3' == map[character.y][character.x / 2])
-		{
-			map[line1][hole1] = '0';
-		}
-		else if ('4' == map[character.y][character.x / 2])
-		{
-			map[line2][hole2] = '0';
-		}
-		else if ('2' == map[character.y][character.x / 2])
-		{
-			for (int i = 1; i < 8; i++)
-			{
-				if (line1 > line2 && hole1 != i)
-					map[line1][i] = '1';
-				else if (line1 > line2 && hole1 == i)
-					map[line1][hole1] ='6';
-				else if (line2 > line1 && hole2 != i)
-					map[line2][i] = '1';
-				else if (line2 > line1 && hole2 == i)
-					map[line2][hole2] = '6';
-			}
-		}
-
-		if (CurrentTime != 0 && CurrentTime & heartspeed == 0)
-			heartline++;
-
 		if (CurrentTime != 0 && CurrentTime % level == 0)
 		{
+
+			if ('3' == map[character.y][character.x / 2])
+			{
+				score++;
+				speed++;
+			}
+
+			if ('2' == map[character.y][character.x / 2])
+			{
+				for (int i = 1; i < 8; i++)
+				{
+					if (line1 > line2 && hole1 != i)
+						map[line1][i] = '1';
+					else if (line1 > line2 && hole1 == i)
+						map[line1][hole1] = '0';
+					else if (line2 > line1 && hole2 != i)
+						map[line2][i] = '1';
+					else if (line2 > line1 && hole2 == i)
+						map[line2][hole2] = '0';
+				}
+				if (defense == 0)
+					health--;
+				else if (defense == 1)
+				{
+					character.shape = "¡â";
+					defense = 0;
+				}
+			}
+
+			if ('4' == map[character.y][character.x / 2])
+			{
+				heartOn = 0;
+				line3 = 1;
+				if (health != 3)
+					health++;
+			}
+
+			if ('5' == map[character.y][character.x / 2])
+			{
+				starOn = 0;
+				line4 = 0;
+				character.shape = "¡ã";
+				defense = 1;
+			}
+
+			if (speed != 0 && speed % 3 == 0)
+			{
+				level -= 5;
+				speed = 0;
+			}
+
+			if (heartOn == 0 && (item == 0 || item == 1))
+			{
+				heart = rand() % 7 + 1;
+				heartOn = 1;
+			}
+			else if (defense == 0 && starOn == 0 && item == 2)
+			{
+				star = rand() % 7 + 1;
+				starOn = 1;
+			}
+
+			if (heartOn == 1)
+				line3++;
+
+			if (starOn == 1)
+				line4++;
+
+			if (line3 >= 25)
+			{
+				line3 = 1;
+				heartOn = 0;
+			}
+
+			if (line4 >= 25)
+			{
+				line4 = 1;
+				starOn = 0;
+			}
+
 			system("cls");
 			Render();
 			Position(character.x, character.y);
 			printf("%s", character.shape);
 			line1++;
-			line2++;	
+			line2++;
 		}
+
+		if (CurrentTime != 0 && CurrentTime % itemSpeed == 0)
+			item = rand() % 20;
+
 
 		if (health == 0)
 			break;
 	}
 
 	system("cls");
-	Sleep(500);
+	Sleep(1000);
 	printf("----GAME OVER----\n");
 	printf("score : %d\n\n", score);
 	printf("%s\n", select[0]);
@@ -310,7 +353,7 @@ int main()
 				printf("----GAME OVER----\n");
 				printf("score : %d\n\n", score);
 				printf("%s\n", select[2]);
-				again = 0;
+				again = 2;
 				break;
 			}
 			}
@@ -321,13 +364,21 @@ int main()
 				score = 0;
 				line1 = 1;
 				line2 = 1;
+				line3 = 1;
+				line4 = 1;
 				hole1 = 0;
 				hole2 = 0;
 				level = 200;
 				health = 3;
+				character.x = 8;
+				character.y = 22;
+				character.shape = "¡ã";
+				heartOn = 0;
+				starOn = 0;
+				defense = 0;
 				goto AGAIN;
 			}
-			else if (again == 0 && GetAsyncKeyState(VK_SPACE) & 0x0001)
+			else if (again == 2 && GetAsyncKeyState(VK_SPACE) & 0x0001)
 				goto EXIT;
 		}
 	}
