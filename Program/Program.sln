@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Class3th (Maze Game)", "..\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Class4th (File Input and Output)", "..\Class4th (File input and Output)\Class4th (File input and Output).vcxproj", "{D19C497E-176E-46BB-812B-24D03D4125D7}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "..\Game\Game.vcxproj", "{B63D10EF-4594-49CD-86D5-ED3ABCF9E03F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -61,6 +63,14 @@ Global
 		{D19C497E-176E-46BB-812B-24D03D4125D7}.Release|x64.Build.0 = Release|x64
 		{D19C497E-176E-46BB-812B-24D03D4125D7}.Release|x86.ActiveCfg = Release|Win32
 		{D19C497E-176E-46BB-812B-24D03D4125D7}.Release|x86.Build.0 = Release|Win32
+		{B63D10EF-4594-49CD-86D5-ED3ABCF9E03F}.Debug|x64.ActiveCfg = Debug|x64
+		{B63D10EF-4594-49CD-86D5-ED3ABCF9E03F}.Debug|x64.Build.0 = Debug|x64
+		{B63D10EF-4594-49CD-86D5-ED3ABCF9E03F}.Debug|x86.ActiveCfg = Debug|Win32
+		{B63D10EF-4594-49CD-86D5-ED3ABCF9E03F}.Debug|x86.Build.0 = Debug|Win32
+		{B63D10EF-4594-49CD-86D5-ED3ABCF9E03F}.Release|x64.ActiveCfg = Release|x64
+		{B63D10EF-4594-49CD-86D5-ED3ABCF9E03F}.Release|x64.Build.0 = Release|x64
+		{B63D10EF-4594-49CD-86D5-ED3ABCF9E03F}.Release|x86.ActiveCfg = Release|Win32
+		{B63D10EF-4594-49CD-86D5-ED3ABCF9E03F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

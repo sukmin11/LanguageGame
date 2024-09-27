@@ -50,10 +50,19 @@ char map[HEIGHT][WIDTH] = {
 	{'1','1','1','1','1','1','1','1','1'},
 };
 
+void setColor(int color) {
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, color);
+}
+
 void Render()
 {
-	for (int i = 0; i < health; i++) // HP 표시
+	for (int i = 0; i < health; i++)
+	{
+		setColor(4);
 		printf("♥");
+		setColor(7);
+	}
 
 	printf("\n");
 
@@ -66,11 +75,23 @@ void Render()
 			else if (map[i][j] == '1')
 				printf("■");
 			else if (map[i][j] == '2')
+			{
+				setColor(3);
 				printf("※");
+				setColor(7);
+			}
 			else if (map[i][j] == '4')
+			{
+				setColor(4);
 				printf("♥");
+				setColor(7);
+			}
 			else if (map[i][j] == '5')
+			{
+				setColor(6);
 				printf("★");
+				setColor(7);
+			}
 		}
 		printf("\n");
 	}
@@ -86,9 +107,32 @@ void Position(int x, int y)
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), position);
 }
 
+void setColor2(int textColor, int bgColor) {
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, textColor | (bgColor << 4));
+}
+
+void startscreen() {
+	printf("■■■■■■■■■\n");
+	printf("■              ■\n");
+	printf("■ 피하기  게임 ■\n");
+	printf("■              ■\n");
+	printf("■              ■\n");
+	printf("■■■■■■■■■\n");
+	printf("\n");
+	printf("\n");
+	printf("      "); printf(" START ");
+	printf("\n\n\n");
+	printf("      "); printf("  END  ");
+}
+
 int main()
 {
 	srand(time(NULL));
+
+	startscreen();
+
+	Sleep(5000);
 
 	const char* select[3];
 
@@ -106,14 +150,15 @@ int main()
 	int line2 = 1;
 	int line3 = 1;
 	int line4 = 1;
-	int level = 300;
+	int level = 200;
 	int speed = 0;
 	int itemSpeed = 200;
 	int item = 0;
-	int heartOn = 0;
 	int heart = 0;
-	int starOn = 0;
+	int heartOn = 0;
 	int star = 0;
+	int starOn = 0;
+	int starEat = 0;
 	int defense = 0;
 
 AGAIN:
@@ -124,7 +169,7 @@ AGAIN:
 		map[line1][i] = '2';
 
 	map[line1][hole1] = '3';
-
+	system("mode con: cols=18 lines=30");
 	Render();
 
 	while (1)
@@ -217,7 +262,7 @@ AGAIN:
 			}
 
 			system("cls");
-
+			system("mode con: cols=18 lines=30");
 			Render();
 			Position(character.x, character.y);
 			printf("%s", character.shape);
@@ -307,6 +352,7 @@ AGAIN:
 			}
 
 			system("cls");
+			system("mode con: cols=18 lines=30");
 			Render();
 			Position(character.x, character.y);
 			printf("%s", character.shape);
@@ -315,7 +361,7 @@ AGAIN:
 		}
 
 		if (CurrentTime != 0 && CurrentTime % itemSpeed == 0)
-			item = rand() % 20;
+			item = rand() % 10;
 
 
 		if (health == 0)
@@ -323,6 +369,7 @@ AGAIN:
 	}
 
 	system("cls");
+	system("mode con: cols=18 lines=30");
 	Sleep(1000);
 	printf("----GAME OVER----\n");
 	printf("score : %d\n\n", score);
@@ -342,6 +389,7 @@ AGAIN:
 			{
 			case UP: {
 				system("cls");
+				system("mode con: cols=18 lines=30");
 				printf("----GAME OVER----\n");
 				printf("score : %d\n\n", score);
 				printf("%s\n", select[1]);
@@ -350,6 +398,7 @@ AGAIN:
 			}
 			case DOWN: {
 				system("cls");
+				system("mode con: cols=18 lines=30");
 				printf("----GAME OVER----\n");
 				printf("score : %d\n\n", score);
 				printf("%s\n", select[2]);
@@ -361,6 +410,7 @@ AGAIN:
 			if (again == 1 && GetAsyncKeyState(VK_SPACE) & 0x0001)
 			{
 				system("cls");
+				system("mode con: cols=18 lines=30");
 				score = 0;
 				line1 = 1;
 				line2 = 1;
