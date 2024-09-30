@@ -29,14 +29,14 @@ int main()
 
 	// 첫 번째 매개변수 (파일의 이름)
 	// 두 번째 매개변수 (파일의 입출력 모드)
-	// FILE* file = fopen("data.txt", "w");
-	// 
-	// fputs("Character Information\n", file);
-	// fputs("Health : \n", file);
-	// fputs("Attack : \n", file);
-	// fputs("Defense : \n", file);
-	// 
-	// fclose(file);
+	FILE* file = fopen("data.txt", "w");
+	
+	fputs("Character Information\n", file);
+	fputs("Health : \n", file);
+	fputs("Attack : \n", file);
+	fputs("Defense : \n", file);
+	
+	fclose(file);
 
 #pragma endregion
 

@@ -1,9 +1,11 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <Windows.h>
 #include <conio.h>
 
+#define SIZE 1000
 #define UP 72
 #define LEFT 75
 #define RIGHT 77
@@ -12,8 +14,29 @@
 #define WIDTH 9
 #define HEIGHT 25
 
+int highscore = 0;
 int score = 0;
 int health = 3;
+
+void Load(const char* filename)
+{
+	FILE* file = fopen(filename, "r");
+
+	char buffer[SIZE] = { 0, };
+
+	// 첫 번째 매개변수 : 읽은 데이터를 저장할 메모리 버퍼의 포인터 변수
+	// 두 번째 매개변수 : 각 데이터 항목의 크기
+	// 세 번째 매개변수 : 데이터를 읽어올 데이터 항목의 수
+	// 네 번쨰 매개변수 : 데이터를 읽어올 파일의 포인터 변수
+
+	fread(buffer, 1, SIZE, file);
+
+	printf("%s", buffer);
+
+	highscore = atoi("%s", buffer);
+
+	fclose(file);
+}
 
 typedef struct Character
 {
@@ -50,22 +73,13 @@ char map[HEIGHT][WIDTH] = {
 	{'1','1','1','1','1','1','1','1','1'},
 };
 
-void setColor(int color) {
+void setColor(int textColor, int bgColor) {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, color);
+	SetConsoleTextAttribute(hConsole, textColor | (bgColor << 4));
 }
 
 void Render()
 {
-	for (int i = 0; i < health; i++)
-	{
-		setColor(4);
-		printf("♥");
-		setColor(7);
-	}
-
-	printf("\n");
-
 	for (int i = 0; i < HEIGHT; i++)
 	{
 		for (int j = 0; j < WIDTH; j++)
@@ -76,26 +90,35 @@ void Render()
 				printf("■");
 			else if (map[i][j] == '2')
 			{
-				setColor(3);
+				setColor(9,0);
 				printf("※");
-				setColor(7);
+				setColor(7,0);
 			}
 			else if (map[i][j] == '4')
 			{
-				setColor(4);
+				setColor(4,0);
 				printf("♥");
-				setColor(7);
+				setColor(7,0);
 			}
 			else if (map[i][j] == '5')
 			{
-				setColor(6);
+				setColor(6,0);
 				printf("★");
-				setColor(7);
+				setColor(7,0);
 			}
 		}
 		printf("\n");
 	}
-	printf("score : %d\n", score);
+	printf("health:");
+	for (int i = 0; i < health; i++)
+	{
+		setColor(4, 0);
+		printf("♥");
+		setColor(7, 0);
+	}
+	printf("\n");
+	printf("score : %d\n", score); 
+	printf("highscore : %d\n", highscore);
 }
 
 void Position(int x, int y)
@@ -107,12 +130,7 @@ void Position(int x, int y)
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), position);
 }
 
-void setColor2(int textColor, int bgColor) {
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, textColor | (bgColor << 4));
-}
-
-void startscreen() {
+void startscreen(int x, int y, int i, int j) {
 	printf("■■■■■■■■■\n");
 	printf("■              ■\n");
 	printf("■ 피하기  게임 ■\n");
@@ -121,18 +139,61 @@ void startscreen() {
 	printf("■■■■■■■■■\n");
 	printf("\n");
 	printf("\n");
-	printf("      "); printf(" START ");
+	printf("   "); setColor(x, y); printf(" 게임 시작 "); setColor(7, 0);
 	printf("\n\n\n");
-	printf("      "); printf("  END  ");
+	printf("   "); setColor(i, j); printf(" 게임 종료 "); setColor(7, 0);
 }
 
 int main()
 {
+	int again = 0;
+	char key = 0;
+
 	srand(time(NULL));
 
-	startscreen();
+	system("mode con: cols=18 lines=30");
 
-	Sleep(5000);
+	startscreen(7,0,7,0);
+
+	while (1)
+	{
+
+		if (_kbhit())
+		{
+			key = _getch();
+
+			if (key == -32)
+			{
+				key = _getch();
+			}
+
+			switch (key)
+			{
+			case UP: {
+				system("cls");
+				system("mode con: cols=18 lines=30");
+				startscreen(0, 7, 7, 0);
+				again = 1;
+				break;
+			}
+			case DOWN: {
+				system("cls");
+				system("mode con: cols=18 lines=30");
+				startscreen(7,0,0,7);
+				again = 2;
+				break;
+			}
+			}
+
+			if (again == 1 && GetAsyncKeyState(VK_SPACE) & 0x0001)
+			{
+				again = 0;
+				break;
+			}
+			else if (again == 2 && GetAsyncKeyState(VK_SPACE) & 0x0001)
+				goto EXIT;
+		}
+	}
 
 	const char* select[3];
 
@@ -142,8 +203,6 @@ int main()
 
 	Character character = { 8,22,"△" };
 
-	int again = 0;
-	char key = 0;
 	int hole1 = 0;
 	int hole2 = 0;
 	int line1 = 1;
@@ -158,7 +217,6 @@ int main()
 	int heartOn = 0;
 	int star = 0;
 	int starOn = 0;
-	int starEat = 0;
 	int defense = 0;
 
 AGAIN:
@@ -234,6 +292,11 @@ AGAIN:
 			map[line1][hole1] = '3';
 		}
 
+		for (int i = 1; i < WIDTH - 1; i++)
+		{
+			map[24][i] = '1';
+		}
+
 		if (_kbhit())
 		{
 			key = _getch();
@@ -276,6 +339,7 @@ AGAIN:
 			{
 				score++;
 				speed++;
+				if(score > highscore)
 			}
 
 			if ('2' == map[character.y][character.x / 2])
@@ -362,7 +426,6 @@ AGAIN:
 
 		if (CurrentTime != 0 && CurrentTime % itemSpeed == 0)
 			item = rand() % 10;
-
 
 		if (health == 0)
 			break;
