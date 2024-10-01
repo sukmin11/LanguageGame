@@ -15,28 +15,33 @@
 #define HEIGHT 25
 
 int highscore = 0;
-int score = 0;
 int health = 3;
 
-void Load(const char* filename)
-{
-	FILE* file = fopen(filename, "r");
-
-	char buffer[SIZE] = { 0, };
-
-	// 첫 번째 매개변수 : 읽은 데이터를 저장할 메모리 버퍼의 포인터 변수
-	// 두 번째 매개변수 : 각 데이터 항목의 크기
-	// 세 번째 매개변수 : 데이터를 읽어올 데이터 항목의 수
-	// 네 번쨰 매개변수 : 데이터를 읽어올 파일의 포인터 변수
-
-	fread(buffer, 1, SIZE, file);
-
-	printf("%s", buffer);
-
-	highscore = atoi("%s", buffer);
-
+void saveScore(int score) {
+	FILE* file = fopen("highscore.txt", "w");
+	if (file == NULL)
+	{
+		printf("파일을 열 수 없습니다.\n");
+		return;
+	}
+	fprintf(file, "%d\n", score);
 	fclose(file);
 }
+
+int loadScore() {
+	highscore;
+	FILE* file = fopen("highscore.txt", "r");
+	if (file == NULL)
+	{
+		printf("파일을 열 수 없습니다.\n");
+		return -1;
+	}
+	fscanf(file, "%d", &highscore);
+	fclose(file);
+	return highscore;
+}
+
+int score = 0;
 
 typedef struct Character
 {
@@ -80,6 +85,8 @@ void setColor(int textColor, int bgColor) {
 
 void Render()
 {
+	highscore = loadScore();
+
 	for (int i = 0; i < HEIGHT; i++)
 	{
 		for (int j = 0; j < WIDTH; j++)
@@ -329,7 +336,6 @@ AGAIN:
 			Render();
 			Position(character.x, character.y);
 			printf("%s", character.shape);
-
 		}
 
 		if (CurrentTime != 0 && CurrentTime % level == 0)
@@ -339,7 +345,8 @@ AGAIN:
 			{
 				score++;
 				speed++;
-				if(score > highscore)
+				if (score > highscore)
+					saveScore(score);
 			}
 
 			if ('2' == map[character.y][character.x / 2])
