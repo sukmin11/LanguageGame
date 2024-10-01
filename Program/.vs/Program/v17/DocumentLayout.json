@@ -3,6 +3,9 @@
   "WorkspaceRootPath": "C:\\Users\\USER\\Documents\\GitHub\\LanguageGame\\Program\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{B63D10EF-4594-49CD-86D5-ED3ABCF9E03F}|..\\Game\\Game.vcxproj|C:\\Users\\USER\\Documents\\GitHub\\LanguageGame\\Game\\Source.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{5C88AC39-0176-4CEE-91EE-A508C4FE484D}|Program.vcxproj|C:\\Users\\USER\\Documents\\GitHub\\LanguageGame\\Program\\Source.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{5C88AC39-0176-4CEE-91EE-A508C4FE484D}|Program.vcxproj|solutionrelative:Source.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
@@ -32,7 +35,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 13,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -64,7 +67,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 0,
+              "Title": "Source.c",
+              "DocumentMoniker": "C:\\Users\\USER\\Documents\\GitHub\\LanguageGame\\Game\\Source.c",
+              "RelativeDocumentMoniker": "..\\Game\\Source.c",
+              "ToolTip": "C:\\Users\\USER\\Documents\\GitHub\\LanguageGame\\Game\\Source.c",
+              "RelativeToolTip": "..\\Game\\Source.c",
+              "ViewState": "AQIAAK4AAAAAAAAAAAAAADUAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2024-10-01T13:48:15.63Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "gs_report.c",
               "DocumentMoniker": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\crt\\src\\vcruntime\\gs_report.c",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.38.33130\\crt\\src\\vcruntime\\gs_report.c",
@@ -76,7 +92,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Source.c",
               "DocumentMoniker": "C:\\Users\\USER\\Documents\\GitHub\\LanguageGame\\Class4th (File input and Output)\\Source.c",
               "RelativeDocumentMoniker": "..\\Class4th (File input and Output)\\Source.c",
@@ -88,7 +104,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "Source.c",
               "DocumentMoniker": "C:\\Users\\USER\\Documents\\GitHub\\LanguageGame\\Class3th (Maze Game)\\Source.c",
               "RelativeDocumentMoniker": "..\\Class3th (Maze Game)\\Source.c",
@@ -100,7 +116,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Source.c",
               "DocumentMoniker": "C:\\Users\\USER\\Documents\\GitHub\\LanguageGame\\Class2th (Double Buffering)\\Source.c",
               "RelativeDocumentMoniker": "..\\Class2th (Double Buffering)\\Source.c",
@@ -112,19 +128,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Source.c",
               "DocumentMoniker": "C:\\Users\\USER\\Documents\\GitHub\\LanguageGame\\Class1th (GetAsyncKeyState)\\Source.c",
               "RelativeDocumentMoniker": "..\\Class1th (GetAsyncKeyState)\\Source.c",
               "ToolTip": "C:\\Users\\USER\\Documents\\GitHub\\LanguageGame\\Class1th (GetAsyncKeyState)\\Source.c",
               "RelativeToolTip": "..\\Class1th (GetAsyncKeyState)\\Source.c",
-              "ViewState": "AQIAADAAAAAAAAAAAAAAAEMAAAAFAAAA",
+              "ViewState": "AQIAADMAAAAAAAAAAAAAAEMAAAAtAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2024-09-25T14:13:29.129Z"
+              "WhenOpened": "2024-09-25T14:13:29.129Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "stdio.h",
               "DocumentMoniker": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\ucrt\\stdio.h",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.19041.0\\ucrt\\stdio.h",
@@ -136,13 +153,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Source.c",
               "DocumentMoniker": "C:\\Users\\USER\\Documents\\GitHub\\LanguageGame\\Program\\Source.c",
               "RelativeDocumentMoniker": "Source.c",
               "ToolTip": "C:\\Users\\USER\\Documents\\GitHub\\LanguageGame\\Program\\Source.c",
               "RelativeToolTip": "Source.c",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAIUBAAAAAAAA",
+              "ViewState": "AQIAAEIAAAAAAAAAAAAAAFAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2024-09-25T14:13:29.168Z",
               "EditorCaption": ""

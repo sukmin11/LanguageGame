@@ -12,6 +12,7 @@
 #define RIGHT 77
 #define DOWN 80
 
+int bomb = 140;
 int rand_height;
 int rand_width;
 
@@ -33,6 +34,11 @@ char map[HEIGHT][WIDTH] = {
 	{'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'},
 };
 
+void setColor(int textColor, int bgColor) {
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, textColor | (bgColor << 4));
+}
+
 void Shuffle()
 {
 	srand(time(NULL));
@@ -53,21 +59,18 @@ void Shuffle()
 	}
 }
 
-void number(int x, int y)
+int number(int x, int y)
 {
 	int number = 0;
-	if (map[x + 1][y] == '2')
-		number++;
-	if (map[x - 1][y] == '2')
-		number++;
-	if (map[x + 1][y + 1] == '2')
-		number++;
-	if (map[x + 1][y - 1] == '2')
-		number++;
-	if (map[x - 1][y + 1] == '2')
-		number++;
-	if (map[x - 1][y - 1] == '2')
-		number++;
+
+	for (int i = -1; i <= 1; i++)
+	{
+		for (int j = -1; j <= 1; j++)
+			if (map[y + i][x + j] == '2')
+				number++;
+	}
+
+	return number;
 }
 
 void Render()
@@ -82,9 +85,30 @@ void Render()
 				printf("¡á");
 			else if (map[i][j] == '2')
 				printf("¡à");
+			else if (map[i][j] == '3')
+				printf("£À");
+			else if (map[i][j] == 0)
+				printf("  ");
+			else if (map[i][j] == 1)
+				printf(" 1");
+			else if (map[i][j] == 2)
+				printf(" 2");
+			else if (map[i][j] == 3)
+				printf(" 3");
+			else if (map[i][j] == 4)
+				printf(" 4");
+			else if (map[i][j] == 5)
+				printf(" 5");
+			else if (map[i][j] == 6)
+				printf(" 6");
+			else if (map[i][j] == 7)
+				printf(" 7");
+			else if (map[i][j] == 8)
+				printf(" 8");
 		}
 		printf("\n");
 	}
+	printf("Áö·Ú : %d\n", bomb);
 }
 
 typedef struct Character {
@@ -107,7 +131,7 @@ int main()
 {
 	char key = 0; 
 
-	Character character = { 30, 8, "£À" };
+	Character character = { 30, 8, "¡à" };
 	
 	srand(time(NULL));
 
@@ -152,7 +176,7 @@ int main()
 					character.y++;
 				}
 				break;
-			default:printf("Exception\n");
+			default:
 				break;
 			}
 
@@ -162,6 +186,20 @@ int main()
 			Position(character.x, character.y);
 			printf("%s", character.shape);
 		}
+
+		if (GetAsyncKeyState(VK_SPACE) & 0x0001)
+		{
+			if (map[character.y][character.x / 2] == '0')
+				map[character.y][character.x / 2] = number(character.x / 2, character.y);
+			else if (map[character.y][character.x / 2] == '2')
+				break;
+		}
+		if (GetAsyncKeyState(VK_SHIFT) & 0x0001)
+			if (map[character.y][character.x / 2] == '0' || map[character.y][character.x / 2] == '2')
+			{
+				bomb--;
+				map[character.y][character.x / 2] = '3';
+			}
 	}
 	return 0;
 }
