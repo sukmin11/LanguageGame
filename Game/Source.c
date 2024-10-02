@@ -73,38 +73,105 @@ int number(int x, int y)
 	return number;
 }
 
-void Render()
+void Render(int a, int b)
 {
 	for (int i = 0; i < HEIGHT; i++)
 	{
 		for (int j = 0; j < WIDTH; j++)
 		{
-			if (map[i][j] == '0')
-				printf("  ");
-			else if (map[i][j] == '1')
-				printf("¡á");
-			else if (map[i][j] == '2')
+			if (map[i][j] == '0') // 0: °ø¹é, 2: Áö·Ú
+			{
+				if (i == b && j == a)
+					setColor(3, 0);
 				printf("¡à");
-			else if (map[i][j] == '3')
-				printf("£À");
+				setColor(7, 0);
+			}
+			else if (map[i][j] == '1') // º®
+			printf("¡á");
+			else if(map[i][j] == '2')
+			{
+				setColor(4, 0);
+				printf("¡Ø");
+				setColor(7, 0);
+			}
+			else if (map[i][j] == '3' || map[i][j] == '4') // ±ê¹ß
+			{
+				setColor(7, 4);
+				if (i == b && j == a)
+					setColor(3, 4);
+				printf("¡à");
+				setColor(7, 0);
+			}
+			else if(map[i][j] == '5') // Áö·Ú
+			{
+				setColor(4, 0);
+				printf("¡Ø");
+				setColor(7, 0);
+			}
 			else if (map[i][j] == 0)
-				printf("  ");
+			{
+				setColor(0, 0);
+				if (i == b && j == a)
+					setColor(3, 0);
+				printf("¡à");
+				setColor(7, 0);
+			}
 			else if (map[i][j] == 1)
+			{
+				if (i == b && j == a)
+					setColor(3, 0);
 				printf(" 1");
+				setColor(7, 0);
+			}
 			else if (map[i][j] == 2)
+			{
+				if (i == b && j == a)
+					setColor(3, 0);
 				printf(" 2");
+				setColor(7, 0);
+			}
 			else if (map[i][j] == 3)
+			{
+				if (i == b && j == a)
+					setColor(3, 0);
 				printf(" 3");
+				setColor(7, 0);
+			}
 			else if (map[i][j] == 4)
+			{
+				if (i == b && j == a)
+					setColor(3, 0);
 				printf(" 4");
+				setColor(7, 0);
+			}
 			else if (map[i][j] == 5)
+			{
+				if (i == b && j == a)
+					setColor(3, 0);
 				printf(" 5");
+				setColor(7, 0);
+			}
 			else if (map[i][j] == 6)
+			{
+				if (i == b && j == a)
+					setColor(3, 0);
 				printf(" 6");
+				setColor(7, 0);
+			}
 			else if (map[i][j] == 7)
+			{
+				if (i == b && j == a)
+					setColor(3, 0);
 				printf(" 7");
+				setColor(7, 0);
+			}
 			else if (map[i][j] == 8)
+			{
+				if (i == b && j == a)
+					setColor(3, 0);
 				printf(" 8");
+				setColor(7, 0);
+			}
 		}
 		printf("\n");
 	}
@@ -115,7 +182,6 @@ typedef struct Character {
 
 	int x; 
 	int y;
-	const char* shape;
 }Character;
 
 void Position(int x, int y)
@@ -130,14 +196,15 @@ void Position(int x, int y)
 int main()
 {
 	char key = 0; 
+	int clear = 0;
 
-	Character character = { 30, 8, "¡à" };
+	Character character = { 30, 8 };
 	
 	srand(time(NULL));
 
 	Shuffle();
 
-	Render();
+	Render(character.x / 2, character.y);
 
 	while (1)
 	{
@@ -182,24 +249,87 @@ int main()
 
 			system("cls");
 
-			Render();
+			Render(character.x / 2, character.y);
 			Position(character.x, character.y);
-			printf("%s", character.shape);
 		}
 
-		if (GetAsyncKeyState(VK_SPACE) & 0x0001)
+		if ((GetAsyncKeyState(VK_SPACE) & 0x0001) && map[character.y][character.x / 2] != '3' && map[character.y][character.x / 2] != '4')
 		{
 			if (map[character.y][character.x / 2] == '0')
+			{
+				clear++;
 				map[character.y][character.x / 2] = number(character.x / 2, character.y);
+			}
 			else if (map[character.y][character.x / 2] == '2')
+			{
+				for (int i = 1; i < HEIGHT - 1; i++)
+					for (int j = 1; j < WIDTH - 1; j++)
+						if (map[i][j] == '2')
+							map[i][j] = '5';
+				system("cls");
+				Render(character.x / 2, character.y);
 				break;
+			}
 		}
+
+		for (int a = 1; a < HEIGHT - 1; a++)
+		{
+			for(int b = 1; b < WIDTH - 1; b ++)
+				if(map[a][b] == 0)
+					for (int i = -1; i <= 1; i++)
+					{
+						for (int j = -1; j <= 1; j++)
+							if (map[a + i][b + j] != '2' && map[a + i][b + j] != '1')
+							{
+								if (number(b + j, a + i) == 0)
+									map[a + i][b + j] = 0;
+								else if (number(b + j, a + i) == 1)
+									map[a + i][b + j] = 1;
+								else if (number(b + j, a + i) == 2)
+									map[a + i][b + j] = 2;
+								else if (number(b + j, a + i) == 3)
+									map[a + i][b + j] = 3;
+							}
+					}
+		}
+
 		if (GetAsyncKeyState(VK_SHIFT) & 0x0001)
-			if (map[character.y][character.x / 2] == '0' || map[character.y][character.x / 2] == '2')
+		{
+			if (map[character.y][character.x / 2] == '0')
 			{
 				bomb--;
 				map[character.y][character.x / 2] = '3';
+				system("cls");
+				Render(character.x / 2, character.y);
 			}
+			else if (map[character.y][character.x / 2] == '2')
+			{
+				bomb--;
+				map[character.y][character.x / 2] = '4';
+				system("cls");
+				Render(character.x / 2, character.y);
+			}
+			else if (map[character.y][character.x / 2] == '3')
+			{
+				bomb++;
+				map[character.y][character.x / 2] = '0';
+				system("cls");
+				Render(character.x / 2, character.y);
+			}
+			else if (map[character.y][character.x / 2] == '4')
+			{
+				bomb++;
+				map[character.y][character.x / 2] = '2';
+				system("cls");
+				Render(character.x / 2, character.y);
+			}
+		}
+
+		if (clear == 8 * 28)
+			break;
 	}
+
+
+
 	return 0;
 }
