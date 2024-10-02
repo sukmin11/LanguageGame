@@ -66,7 +66,7 @@ int number(int x, int y)
 	for (int i = -1; i <= 1; i++)
 	{
 		for (int j = -1; j <= 1; j++)
-			if (map[y + i][x + j] == '2')
+			if (map[y + i][x + j] == '2' || map[y + i][x + j] == '4')
 				number++;
 	}
 
@@ -193,10 +193,25 @@ void Position(int x, int y)
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), position);
 }
 
+int clear()
+{
+	int clear = 0;
+
+	for (int i = 1; i < HEIGHT - 1; i++)
+	{
+		for (int j = 1; j < WIDTH - 1; j++)
+		{
+			if (map[i][j] != '0' && map[i][j] != '2' && map[i][j] != '3' && map[i][j] != '4')
+				clear++;
+		}
+	}
+
+	return clear;
+}
+
 int main()
 {
 	char key = 0; 
-	int clear = 0;
 
 	Character character = { 30, 8 };
 	
@@ -257,7 +272,6 @@ int main()
 		{
 			if (map[character.y][character.x / 2] == '0')
 			{
-				clear++;
 				map[character.y][character.x / 2] = number(character.x / 2, character.y);
 			}
 			else if (map[character.y][character.x / 2] == '2')
@@ -279,7 +293,7 @@ int main()
 					for (int i = -1; i <= 1; i++)
 					{
 						for (int j = -1; j <= 1; j++)
-							if (map[a + i][b + j] != '2' && map[a + i][b + j] != '1')
+							if (map[a + i][b + j] != '2' && map[a + i][b + j] != '4' && map[a + i][b + j] != '1')
 							{
 								if (number(b + j, a + i) == 0)
 									map[a + i][b + j] = 0;
@@ -325,7 +339,7 @@ int main()
 			}
 		}
 
-		if (clear == 8 * 28)
+		if (clear() == 8 * 28)
 			break;
 	}
 

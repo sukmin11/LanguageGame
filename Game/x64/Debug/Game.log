@@ -1,6 +1,6 @@
 ﻿  Source.c
-C:\Users\Administrator\Desktop\LanguageGame\Game\Source.c(44,8): warning C4244: '함수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\Administrator\Desktop\LanguageGame\Game\Source.c(203,8): warning C4244: '함수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\Administrator\Desktop\LanguageGame\Game\Source.c(211,7): warning C4013: '_kbhit'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
-C:\Users\Administrator\Desktop\LanguageGame\Game\Source.c(213,10): warning C4013: '_getch'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
-  Game.vcxproj -> C:\Users\Administrator\Desktop\LanguageGame\Program\x64\Debug\Game.exe
+C:\Users\USER\Documents\GitHub\LanguageGame\Game\Source.c(44,8): warning C4244: '함수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\USER\Documents\GitHub\LanguageGame\Game\Source.c(218,8): warning C4244: '함수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\USER\Documents\GitHub\LanguageGame\Game\Source.c(226,7): warning C4013: '_kbhit'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\USER\Documents\GitHub\LanguageGame\Game\Source.c(228,10): warning C4013: '_getch'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+  Game.vcxproj -> C:\Users\USER\Documents\GitHub\LanguageGame\Program\x64\Debug\Game.exe
