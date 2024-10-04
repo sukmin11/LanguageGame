@@ -12,7 +12,7 @@
 #define RIGHT 77
 #define DOWN 80
 
-int bomb = 140;
+int bomb = 112;
 int rand_height;
 int rand_width;
 
@@ -26,7 +26,7 @@ char map[HEIGHT][WIDTH] = {
 	{'1','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','1'},
 	{'1','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','1'},
 	{'1','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','1'},
-	{'1','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','1'},
+	{'1','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','1'},
 	{'1','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','1'},
 	{'1','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','1'},
 	{'1','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','1'},
@@ -73,6 +73,27 @@ int number(int x, int y)
 	return number;
 }
 
+void startscreen() {
+	system("mode con: cols=60 lines=17");
+
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n");
+	printf("■                                                        ■\n");
+	printf("■                                                        ■\n");
+	printf("■                                                        ■\n");
+	printf("■                       지뢰 찾기                        ■\n");
+	printf("■                                                        ■\n");
+	printf("■                                                        ■\n");
+	printf("■                     선택 : SPACE                       ■\n");
+	printf("■                                                        ■\n");
+	printf("■                     깃발 : SHIFT                       ■\n");
+	printf("■                                                        ■\n");
+	printf("■         --시작할려면 엔터 키를 클릭하시오--            ■\n");
+	printf("■                                                        ■\n");
+	printf("■                                                        ■\n");
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n");
+
+}
+
 void Render(int a, int b)
 {
 	for (int i = 0; i < HEIGHT; i++)
@@ -90,8 +111,9 @@ void Render(int a, int b)
 			printf("■");
 			else if(map[i][j] == '2')
 			{
-				setColor(4, 0);
-				printf("※");
+				if (i == b && j == a)
+					setColor(3, 0);
+				printf("□");
 				setColor(7, 0);
 			}
 			else if (map[i][j] == '3' || map[i][j] == '4') // 깃발
@@ -213,136 +235,148 @@ int main()
 {
 	char key = 0; 
 
-	Character character = { 30, 8 };
-	
-	srand(time(NULL));
+	startscreen();
 
-	Shuffle();
+	key = _getch();
 
-	Render(character.x / 2, character.y);
-
-	while (1)
+	if (key == 13)
 	{
-		if (_kbhit())
-		{
-			key = _getch();
 
-			if (key == -32)
+		Character character = { 30, 8 };
+
+		srand(time(NULL));
+
+		Shuffle();
+		system("mode con: cols=60 lines=17");
+		Render(character.x / 2, character.y);
+
+		while (1)
+		{
+			if (_kbhit())
 			{
 				key = _getch();
-			}
 
-			switch (key)
-			{
-			case UP:
-				if (map[character.y - 1][character.x / 2] != '1')
+				if (key == -32)
 				{
-					character.y--;
+					key = _getch();
 				}
-				break;
-			case LEFT:
-				if (map[character.y][character.x / 2 - 1] != '1')
+
+				switch (key)
 				{
-					character.x -= 2;
-				}
-				break;
-			case RIGHT:
-				if (map[character.y][character.x / 2 + 1] != '1')
-				{
-					character.x += 2;
-				}
-				break;
-			case DOWN:
-				if (map[character.y + 1][character.x / 2] != '1')
-				{
-					character.y++;
-				}
-				break;
-			default:
-				break;
-			}
-
-			system("cls");
-
-			Render(character.x / 2, character.y);
-			Position(character.x, character.y);
-		}
-
-		if ((GetAsyncKeyState(VK_SPACE) & 0x0001) && map[character.y][character.x / 2] != '3' && map[character.y][character.x / 2] != '4')
-		{
-			if (map[character.y][character.x / 2] == '0')
-			{
-				map[character.y][character.x / 2] = number(character.x / 2, character.y);
-			}
-			else if (map[character.y][character.x / 2] == '2')
-			{
-				for (int i = 1; i < HEIGHT - 1; i++)
-					for (int j = 1; j < WIDTH - 1; j++)
-						if (map[i][j] == '2')
-							map[i][j] = '5';
-				system("cls");
-				Render(character.x / 2, character.y);
-				break;
-			}
-		}
-
-		for (int a = 1; a < HEIGHT - 1; a++)
-		{
-			for(int b = 1; b < WIDTH - 1; b ++)
-				if(map[a][b] == 0)
-					for (int i = -1; i <= 1; i++)
+				case UP:
+					if (map[character.y - 1][character.x / 2] != '1')
 					{
-						for (int j = -1; j <= 1; j++)
-							if (map[a + i][b + j] != '2' && map[a + i][b + j] != '4' && map[a + i][b + j] != '1')
-							{
-								if (number(b + j, a + i) == 0)
-									map[a + i][b + j] = 0;
-								else if (number(b + j, a + i) == 1)
-									map[a + i][b + j] = 1;
-								else if (number(b + j, a + i) == 2)
-									map[a + i][b + j] = 2;
-								else if (number(b + j, a + i) == 3)
-									map[a + i][b + j] = 3;
-							}
+						character.y--;
 					}
-		}
+					break;
+				case LEFT:
+					if (map[character.y][character.x / 2 - 1] != '1')
+					{
+						character.x -= 2;
+					}
+					break;
+				case RIGHT:
+					if (map[character.y][character.x / 2 + 1] != '1')
+					{
+						character.x += 2;
+					}
+					break;
+				case DOWN:
+					if (map[character.y + 1][character.x / 2] != '1')
+					{
+						character.y++;
+					}
+					break;
+				default:
+					break;
+				}
 
-		if (GetAsyncKeyState(VK_SHIFT) & 0x0001)
-		{
-			if (map[character.y][character.x / 2] == '0')
-			{
-				bomb--;
-				map[character.y][character.x / 2] = '3';
 				system("cls");
+				system("mode con: cols=60 lines=17");
 				Render(character.x / 2, character.y);
+				Position(character.x, character.y);
 			}
-			else if (map[character.y][character.x / 2] == '2')
-			{
-				bomb--;
-				map[character.y][character.x / 2] = '4';
-				system("cls");
-				Render(character.x / 2, character.y);
-			}
-			else if (map[character.y][character.x / 2] == '3')
-			{
-				bomb++;
-				map[character.y][character.x / 2] = '0';
-				system("cls");
-				Render(character.x / 2, character.y);
-			}
-			else if (map[character.y][character.x / 2] == '4')
-			{
-				bomb++;
-				map[character.y][character.x / 2] = '2';
-				system("cls");
-				Render(character.x / 2, character.y);
-			}
-		}
 
-		if (clear() == 8 * 28)
-			break;
+			if ((GetAsyncKeyState(VK_SPACE) & 0x0001) && map[character.y][character.x / 2] != '3' && map[character.y][character.x / 2] != '4')
+			{
+				if (map[character.y][character.x / 2] == '0')
+				{
+					map[character.y][character.x / 2] = number(character.x / 2, character.y);
+				}
+				else if (map[character.y][character.x / 2] == '2')
+				{
+					for (int i = 1; i < HEIGHT - 1; i++)
+						for (int j = 1; j < WIDTH - 1; j++)
+							if (map[i][j] == '2')
+								map[i][j] = '5';
+					system("cls");
+					system("mode con: cols=60 lines=17");
+					Render(character.x / 2, character.y);
+					break;
+				}
+			}
+
+			for (int a = 1; a < HEIGHT - 1; a++)
+			{
+				for (int b = 1; b < WIDTH - 1; b++)
+					if (map[a][b] == 0)
+						for (int i = -1; i <= 1; i++)
+						{
+							for (int j = -1; j <= 1; j++)
+								if (map[a + i][b + j] != '2' && map[a + i][b + j] != '4' && map[a + i][b + j] != '1')
+								{
+									if (number(b + j, a + i) == 0)
+										map[a + i][b + j] = 0;
+									else if (number(b + j, a + i) == 1)
+										map[a + i][b + j] = 1;
+									else if (number(b + j, a + i) == 2)
+										map[a + i][b + j] = 2;
+									else if (number(b + j, a + i) == 3)
+										map[a + i][b + j] = 3;
+								}
+						}
+			}
+
+			if (GetAsyncKeyState(VK_SHIFT) & 0x0001)
+			{
+				if (map[character.y][character.x / 2] == '0')
+				{
+					bomb--;
+					map[character.y][character.x / 2] = '3';
+					system("cls");
+					system("mode con: cols=60 lines=17");
+					Render(character.x / 2, character.y);
+				}
+				else if (map[character.y][character.x / 2] == '2')
+				{
+					bomb--;
+					map[character.y][character.x / 2] = '4';
+					system("cls");
+					system("mode con: cols=60 lines=17");
+					Render(character.x / 2, character.y);
+				}
+				else if (map[character.y][character.x / 2] == '3')
+				{
+					bomb++;
+					map[character.y][character.x / 2] = '0';
+					system("cls");
+					system("mode con: cols=60 lines=17");
+					Render(character.x / 2, character.y);
+				}
+				else if (map[character.y][character.x / 2] == '4')
+				{
+					bomb++;
+					map[character.y][character.x / 2] = '2';
+					system("cls");
+					system("mode con: cols=60 lines=17");
+					Render(character.x / 2, character.y);
+				}
+			}
+
+			if (clear() == 9 * 28)
+				break;
+		}
 	}
-
 
 
 	return 0;
