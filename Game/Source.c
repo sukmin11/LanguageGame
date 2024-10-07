@@ -74,6 +74,7 @@ int number(int x, int y)
 }
 
 void startscreen() {
+	system("cls");
 	system("mode con: cols=60 lines=17");
 
 	printf("¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á\n");
@@ -91,6 +92,7 @@ void startscreen() {
 	printf("¡á                                                        ¡á\n");
 	printf("¡á                                                        ¡á\n");
 	printf("¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á\n");
+
 
 }
 
@@ -231,152 +233,183 @@ int clear()
 	return clear;
 }
 
+void repair()
+{
+	for (int i = 1; i < HEIGHT - 1; i++)
+	{
+		for (int j = 1; j < WIDTH - 1; j++)
+		{
+			if (map[i][j] == '2' || map[i][j] == '4' || map[i][j] == '5')
+				map[i][j] = '2';
+			else
+				map[i][j] = '0';
+		}
+	}
+}
+
 int main()
 {
 	char key = 0; 
 
+	start:
+
 	startscreen();
 
-	key = _getch();
-
-	if (key == 13)
+	while (1)
 	{
+		if (GetAsyncKeyState(VK_RETURN) & 0x0001)
+			break;
+	}
 
-		Character character = { 30, 8 };
+	Character character = { 30, 8 };
 
-		srand(time(NULL));
+	reset:
 
-		Shuffle();
-		system("mode con: cols=60 lines=17");
-		Render(character.x / 2, character.y);
+	repair();
 
-		while (1)
+	srand(time(NULL));
+
+	Shuffle();
+	system("mode con: cols=60 lines=17");
+	Render(character.x / 2, character.y);
+
+	while (1)
+	{
+		if (_kbhit())
 		{
-			if (_kbhit())
+			key = _getch();
+
+			if (key == -32)
 			{
 				key = _getch();
+			}
 
-				if (key == -32)
+			switch (key)
+			{
+			case UP:
+				if (map[character.y - 1][character.x / 2] != '1')
 				{
-					key = _getch();
+					character.y--;
 				}
-
-				switch (key)
+				break;
+			case LEFT:
+				if (map[character.y][character.x / 2 - 1] != '1')
 				{
-				case UP:
-					if (map[character.y - 1][character.x / 2] != '1')
-					{
-						character.y--;
-					}
-					break;
-				case LEFT:
-					if (map[character.y][character.x / 2 - 1] != '1')
-					{
-						character.x -= 2;
-					}
-					break;
-				case RIGHT:
-					if (map[character.y][character.x / 2 + 1] != '1')
-					{
-						character.x += 2;
-					}
-					break;
-				case DOWN:
-					if (map[character.y + 1][character.x / 2] != '1')
-					{
-						character.y++;
-					}
-					break;
-				default:
-					break;
+					character.x -= 2;
 				}
+				break;
+			case RIGHT:
+				if (map[character.y][character.x / 2 + 1] != '1')
+				{
+					character.x += 2;
+				}
+				break;
+			case DOWN:
+				if (map[character.y + 1][character.x / 2] != '1')
+				{
+					character.y++;
+				}
+				break;
+			default:
+				break;
+			}
 
+			system("cls");
+			system("mode con: cols=60 lines=17");
+			Render(character.x / 2, character.y);
+			Position(character.x, character.y);
+		}
+
+		if ((GetAsyncKeyState(VK_SPACE) & 0x0001) && map[character.y][character.x / 2] != '3' && map[character.y][character.x / 2] != '4')
+		{
+			if (map[character.y][character.x / 2] == '0')
+			{
+				map[character.y][character.x / 2] = number(character.x / 2, character.y);
+			}
+			else if (map[character.y][character.x / 2] == '2')
+			{
+				if (clear() == 0)
+					goto reset;
+				for (int i = 1; i < HEIGHT - 1; i++)
+					for (int j = 1; j < WIDTH - 1; j++)
+						if (map[i][j] == '2')
+							map[i][j] = '5';
 				system("cls");
 				system("mode con: cols=60 lines=17");
 				Render(character.x / 2, character.y);
-				Position(character.x, character.y);
-			}
-
-			if ((GetAsyncKeyState(VK_SPACE) & 0x0001) && map[character.y][character.x / 2] != '3' && map[character.y][character.x / 2] != '4')
-			{
-				if (map[character.y][character.x / 2] == '0')
-				{
-					map[character.y][character.x / 2] = number(character.x / 2, character.y);
-				}
-				else if (map[character.y][character.x / 2] == '2')
-				{
-					for (int i = 1; i < HEIGHT - 1; i++)
-						for (int j = 1; j < WIDTH - 1; j++)
-							if (map[i][j] == '2')
-								map[i][j] = '5';
-					system("cls");
-					system("mode con: cols=60 lines=17");
-					Render(character.x / 2, character.y);
-					break;
-				}
-			}
-
-			for (int a = 1; a < HEIGHT - 1; a++)
-			{
-				for (int b = 1; b < WIDTH - 1; b++)
-					if (map[a][b] == 0)
-						for (int i = -1; i <= 1; i++)
-						{
-							for (int j = -1; j <= 1; j++)
-								if (map[a + i][b + j] != '2' && map[a + i][b + j] != '4' && map[a + i][b + j] != '1')
-								{
-									if (number(b + j, a + i) == 0)
-										map[a + i][b + j] = 0;
-									else if (number(b + j, a + i) == 1)
-										map[a + i][b + j] = 1;
-									else if (number(b + j, a + i) == 2)
-										map[a + i][b + j] = 2;
-									else if (number(b + j, a + i) == 3)
-										map[a + i][b + j] = 3;
-								}
-						}
-			}
-
-			if (GetAsyncKeyState(VK_SHIFT) & 0x0001)
-			{
-				if (map[character.y][character.x / 2] == '0')
-				{
-					bomb--;
-					map[character.y][character.x / 2] = '3';
-					system("cls");
-					system("mode con: cols=60 lines=17");
-					Render(character.x / 2, character.y);
-				}
-				else if (map[character.y][character.x / 2] == '2')
-				{
-					bomb--;
-					map[character.y][character.x / 2] = '4';
-					system("cls");
-					system("mode con: cols=60 lines=17");
-					Render(character.x / 2, character.y);
-				}
-				else if (map[character.y][character.x / 2] == '3')
-				{
-					bomb++;
-					map[character.y][character.x / 2] = '0';
-					system("cls");
-					system("mode con: cols=60 lines=17");
-					Render(character.x / 2, character.y);
-				}
-				else if (map[character.y][character.x / 2] == '4')
-				{
-					bomb++;
-					map[character.y][character.x / 2] = '2';
-					system("cls");
-					system("mode con: cols=60 lines=17");
-					Render(character.x / 2, character.y);
-				}
-			}
-
-			if (clear() == 9 * 28)
+				Sleep(3000);
+				goto start;
 				break;
+			}
+		}
+
+		for (int a = 1; a < HEIGHT - 1; a++)
+		{
+			for (int b = 1; b < WIDTH - 1; b++)
+				if (map[a][b] == 0)
+					for (int i = -1; i <= 1; i++)
+					{
+						for (int j = -1; j <= 1; j++)
+							if (map[a + i][b + j] != '2' && map[a + i][b + j] != '4' && map[a + i][b + j] != '1')
+							{
+								if (number(b + j, a + i) == 0)
+									map[a + i][b + j] = 0;
+								else if (number(b + j, a + i) == 1)
+									map[a + i][b + j] = 1;
+								else if (number(b + j, a + i) == 2)
+									map[a + i][b + j] = 2;
+								else if (number(b + j, a + i) == 3)
+									map[a + i][b + j] = 3;
+								else if (number(b + j, a + i) == 4)
+									map[a + i][b + j] = 4;
+							}
+					}
+		}
+
+		if (GetAsyncKeyState(VK_SHIFT) & 0x0001)
+		{
+			if (map[character.y][character.x / 2] == '0')
+			{
+				bomb--;
+				map[character.y][character.x / 2] = '3';
+				system("cls");
+				system("mode con: cols=60 lines=17");
+				Render(character.x / 2, character.y);
+			}
+			else if (map[character.y][character.x / 2] == '2')
+			{
+				bomb--;
+				map[character.y][character.x / 2] = '4';
+				system("cls");
+				system("mode con: cols=60 lines=17");
+				Render(character.x / 2, character.y);
+			}
+			else if (map[character.y][character.x / 2] == '3')
+			{
+				bomb++;
+				map[character.y][character.x / 2] = '0';
+				system("cls");
+				system("mode con: cols=60 lines=17");
+				Render(character.x / 2, character.y);
+			}
+			else if (map[character.y][character.x / 2] == '4')
+			{
+				bomb++;
+				map[character.y][character.x / 2] = '2';
+				system("cls");
+				system("mode con: cols=60 lines=17");
+				Render(character.x / 2, character.y);
+			}
+		}
+
+		if (clear() == 9 * 28)
+		{
+			Sleep(5000);
+			goto start;
+			break;
 		}
 	}
+	
 
 
 	return 0;
