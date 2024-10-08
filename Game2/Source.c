@@ -216,7 +216,7 @@ int main()
 	int line2 = 1;
 	int line3 = 1;
 	int line4 = 1;
-	int level = 200;
+	int level = 150;
 	int speed = 0;
 	int itemSpeed = 200;
 	int item = 0;
@@ -389,7 +389,7 @@ AGAIN:
 
 			if (speed != 0 && speed % 3 == 0)
 			{
-				level -= 5;
+				level -= 3;
 				speed = 0;
 			}
 
